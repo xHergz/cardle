@@ -1,43 +1,109 @@
 .guessGroup {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
 }
 
 .guess {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    border: 1px solid black;
-    border-radius: 8px;
-    height: 75px;
-    width: 75px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 8px;
+  height: 75px;
+  width: 75px;
 }
 
 .notFound {
+  background-color: gray;
+  animation: toNotFound 1s forwards;
+}
+
+@keyframes toNotFound {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: gray;
+  }
 }
 
 .correctSuit {
+  background-color: mediumorchid;
+  animation: toCorrectSuit 1s forwards;
+}
+
+@keyframes toCorrectSuit {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: mediumorchid;
+  }
 }
 
 .correctValue {
+  background-color: cadetblue;
+  animation: toCorrectValue 1s forwards;
+}
+
+@keyframes toCorrectValue {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: cadetblue;
+  }
 }
 
 .wrongPosition {
+  background-color: darkkhaki;
+  animation: toWrongPosition 1s forwards;
+}
+
+@keyframes toWrongPosition {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: darkkhaki;
+  }
 }
 
 .correct {
+  background-color: forestgreen;
+  animation: toCorrect 1s forwards;
+}
+
+@keyframes toCorrect {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: forestgreen;
+  }
 }
 
 .error {
+  background-color: darksalmon;
+  animation: toError 1s forwards;
+}
+
+@keyframes toError {
+  from {
+    background-color: transparent;
+  }
+  to {
     background-color: darksalmon;
+  }
+}
+
+.activeGuess {
+  transition: all 0.2s ease-in-out;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 8px grey;
 }

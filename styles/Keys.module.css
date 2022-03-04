@@ -4,6 +4,7 @@
   height: 75px;
   background-color: lightgray;
   border: "1px solid gray";
+  box-shadow: 0px 2px 4px grey;
 }
 
 .doubleKey {
