@@ -1,12 +1,23 @@
 .key {
-  display: flex;
-  width: 75px;
-  height: 75px;
-  background-color: lightgray;
-  border: "1px solid gray";
-  box-shadow: 0px 2px 4px grey;
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+
+    display: flex;
+    max-width: 50px;
+    height: 50px;
+    background-color: lightgray;
+    border: "1px solid gray";
+    box-shadow: 0px 2px 4px grey;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
 }
 
 .doubleKey {
-  width: 150px;
+    max-width: 150px;
+    flex: 2;
 }
