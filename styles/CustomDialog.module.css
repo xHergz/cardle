@@ -1,0 +1,9 @@
+.dialogTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.dialogTitleContent {
+    flex: 1;
+}

@@ -2,15 +2,21 @@ import { isNil } from "lodash";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { Box, IconButton, Typography } from "@mui/material";
+import AutoGraph from "@mui/icons-material/AutoGraph";
+import Autorenew from "@mui/icons-material/Autorenew";
+import Info from "@mui/icons-material/Info";
+import Settings from "@mui/icons-material/Settings";
 import ActionKey from "../src/components/ActionKey";
+import CustomDialog from "../src/components/CustomDialog";
 import { GuessData } from "../src/components/Guess";
 import GuessGroup, { GUESSES } from "../src/components/GuessGroup";
-import Key from "../src/components/Key";
 import SuitKey from "../src/components/SuitKey";
 import ValueKey from "../src/components/ValueKey";
 import Card, { CardSuit, CardValue } from "../src/lib/card";
 import Deck from "../src/lib/deck";
 import styles from "../styles/Home.module.css";
+import { useVisibility } from "../src/util/hooks.util";
 
 const TRIES = 6;
 
@@ -31,6 +37,7 @@ const Home: NextPage = () => {
     const [currentGuess, setCurrentGuess] = useState<number>(0);
     const [submitted, setSubmitted] = useState<GuessData[][]>([]);
     const [currentTry, setCurrentTry] = useState<number>(0);
+    const [infoModalOpen, openInfoModal, closeInfoModal] = useVisibility(false);
 
     useEffect(() => {
         setCurrentCards(currentDeck.deal(5).map((index) => new Card(index)));
@@ -38,6 +45,10 @@ const Home: NextPage = () => {
 
     const redeal = (): void => {
         setCurrentDeck(new Deck(true));
+        setGuesses([]);
+        setCurrentGuess(0);
+        setSubmitted([]);
+        setCurrentTry(0);
     };
 
     const updateGuess = (guess: GuessData): void => {
@@ -102,7 +113,6 @@ const Home: NextPage = () => {
         setCurrentGuess(currentGuess + 1);
     };
 
-    console.log(submitted);
     return (
         <div className={styles.container}>
             <Head>
@@ -116,7 +126,23 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <header className={styles.header}>
-                <h3>Cardle</h3>
+                <div className={styles.headerSection}>
+                    <IconButton sx={{ color: "white" }} onClick={redeal}>
+                        <Autorenew fontSize="large" />
+                    </IconButton>
+                    <IconButton sx={{ color: "white" }} onClick={openInfoModal}>
+                        <Info fontSize="large" />
+                    </IconButton>
+                </div>
+                <h2 className={styles.headerSection}>Cardle</h2>
+                <div className={styles.headerSection}>
+                    <IconButton sx={{ color: "white" }}>
+                        <AutoGraph fontSize="large" />
+                    </IconButton>
+                    <IconButton sx={{ color: "white" }}>
+                        <Settings fontSize="large" />
+                    </IconButton>
+                </div>
             </header>
             <main className={styles.main}>
                 <div className={styles.gameArea}>
@@ -190,6 +216,32 @@ const Home: NextPage = () => {
                         <ActionKey onClick={backspace} label="Back" />
                     </div>
                 </div>
+                <CustomDialog
+                    id="info"
+                    title="How to Play"
+                    open={infoModalOpen}
+                    onClose={closeInfoModal}
+                >
+                    <>
+                        <Typography variant="body1">
+                            Objective: Correctly guess the 5 random cards. You
+                            get 6 guesses and will receive different information
+                            after each guess.
+                        </Typography>
+                        <Typography variant="body1">
+                            {"\u1F7EA"} = Correct suit, wrong value
+                        </Typography>
+                        <Typography variant="body1">
+                            {"\u1F7E6"} = Correct value, wrong suit
+                        </Typography>
+                        <Typography variant="body1">
+                            {"\u1F7E8"} = Correct value and suit, wrong position
+                        </Typography>
+                        <Typography variant="body1">
+                            {"\u1F7E9"} = Correct value, wrong suit
+                        </Typography>
+                    </>
+                </CustomDialog>
             </main>
 
             <footer className={styles.footer}>
