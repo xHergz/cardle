@@ -17,8 +17,13 @@ import Card, { CardSuit, CardValue } from "../src/lib/card";
 import Deck from "../src/lib/deck";
 import styles from "../styles/Home.module.css";
 import { useVisibility } from "../src/util/hooks.util";
+import { differenceInCalendarDays, startOfDay, subDays } from "date-fns";
 
 const TRIES = 6;
+
+const THE_BEGINNING = 1646651697513;
+
+type GameMode = "daily" | "classic" | "hilo" | "unique" | "poker";
 
 /*
                     <p>Current Deck Size: {currentDeck.size}</p>
@@ -31,20 +36,36 @@ const TRIES = 6;
 */
 
 const Home: NextPage = () => {
-    const [currentDeck, setCurrentDeck] = useState<Deck>(new Deck(true));
+    const [currentDeck, setCurrentDeck] = useState<Deck>(new Deck());
     const [currentCards, setCurrentCards] = useState<Card[]>([]);
     const [guesses, setGuesses] = useState<GuessData[]>([]);
     const [currentGuess, setCurrentGuess] = useState<number>(0);
     const [submitted, setSubmitted] = useState<GuessData[][]>([]);
     const [currentTry, setCurrentTry] = useState<number>(0);
     const [infoModalOpen, openInfoModal, closeInfoModal] = useVisibility(false);
+    const [gameMode, setGameMode] = useState<GameMode>("daily");
 
     useEffect(() => {
+        if (gameMode === "daily") {
+            currentDeck.shuffle(startOfDay(new Date()).valueOf());
+        } else {
+            currentDeck.shuffle();
+        }
         setCurrentCards(currentDeck.deal(5).map((index) => new Card(index)));
-    }, [currentDeck]);
+    }, [currentDeck, gameMode]);
 
     const redeal = (): void => {
-        setCurrentDeck(new Deck(true));
+        const start = new Date(1646651697513);
+        const now = new Date();
+        const currentUtcDay = new Date(
+            now.valueOf() - (now.valueOf() % 86400000)
+        );
+        console.log(startOfDay(start), startOfDay(start).valueOf());
+        console.log(startOfDay(now), startOfDay(now).valueOf());
+        console.log(currentUtcDay, currentUtcDay.valueOf());
+        console.log(now.getUTCDate());
+        console.log(differenceInCalendarDays(start, now));
+        setCurrentDeck(new Deck());
         setGuesses([]);
         setCurrentGuess(0);
         setSubmitted([]);
@@ -113,6 +134,7 @@ const Home: NextPage = () => {
         setCurrentGuess(currentGuess + 1);
     };
 
+    console.log(currentCards);
     return (
         <div className={styles.container}>
             <Head>
