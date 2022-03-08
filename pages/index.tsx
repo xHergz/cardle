@@ -172,7 +172,7 @@ const Home: NextPage = () => {
 
     for (let i = 0; i < GUESSES; i++) {
       if (isNil(submitted[i])) {
-        text += getBlankGuessEmojis().join("");
+        break;
       } else {
         text += getGuessEmojis(submitted[i], currentCards).join("");
       }
