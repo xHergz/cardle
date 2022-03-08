@@ -1,0 +1,13 @@
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.shareActions {
+  justify-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}

@@ -1,6 +1,7 @@
 import { isNil } from "lodash";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import AutoGraph from "@mui/icons-material/AutoGraph";
@@ -18,12 +19,22 @@ import Deck from "../src/lib/deck";
 import styles from "../styles/Home.module.css";
 import { useVisibility } from "../src/util/hooks.util";
 import { differenceInCalendarDays, startOfDay, subDays } from "date-fns";
+import InfoDialog from "../src/components/InfoDialog";
+import StatisticsDialog from "../src/components/StatisticsDialog";
+import OptionsDialog from "../src/components/OptionsDialog";
+import { GameMode } from "../src/components/GameModeOption";
+import { getDailyNumber, getStartOfUtcDay } from "../src/util/common.util";
+import { VERSION } from "../src/constants/version";
+import { getGameModeLabel } from "../src/util/game-mode.util";
+import {
+  getBlankGuessEmojis,
+  getGuessEmojis,
+  isCorrectAnswer,
+} from "../src/util/card.utils";
 
 const TRIES = 6;
 
 const THE_BEGINNING = 1646651697513;
-
-type GameMode = "daily" | "classic" | "hilo" | "unique" | "poker";
 
 /*
                     <p>Current Deck Size: {currentDeck.size}</p>
@@ -36,241 +47,271 @@ type GameMode = "daily" | "classic" | "hilo" | "unique" | "poker";
 */
 
 const Home: NextPage = () => {
-    const [currentDeck, setCurrentDeck] = useState<Deck>(new Deck());
-    const [currentCards, setCurrentCards] = useState<Card[]>([]);
-    const [guesses, setGuesses] = useState<GuessData[]>([]);
-    const [currentGuess, setCurrentGuess] = useState<number>(0);
-    const [submitted, setSubmitted] = useState<GuessData[][]>([]);
-    const [currentTry, setCurrentTry] = useState<number>(0);
-    const [infoModalOpen, openInfoModal, closeInfoModal] = useVisibility(false);
-    const [gameMode, setGameMode] = useState<GameMode>("daily");
+  const [currentDeck, setCurrentDeck] = useState<Deck>(new Deck());
+  const [currentCards, setCurrentCards] = useState<Card[]>([]);
+  const [guesses, setGuesses] = useState<GuessData[]>([]);
+  const [currentGuess, setCurrentGuess] = useState<number>(0);
+  const [submitted, setSubmitted] = useState<GuessData[][]>([]);
+  const [currentTry, setCurrentTry] = useState<number>(0);
+  const [infoDialogOpen, openInfoDialog, closeInfoDialog] =
+    useVisibility(false);
+  const [statsDialogOpen, openStatsDialog, closeStatsDialog] =
+    useVisibility(false);
+  const [optionsDialogOpen, openOptionsDialog, closeOptionsDialog] =
+    useVisibility(false);
+  const [gameMode, setGameMode] = useState<GameMode>("daily");
+  const [complete, setComplete] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (gameMode === "daily") {
-            currentDeck.shuffle(startOfDay(new Date()).valueOf());
-        } else {
-            currentDeck.shuffle();
-        }
-        setCurrentCards(currentDeck.deal(5).map((index) => new Card(index)));
-    }, [currentDeck, gameMode]);
+  useEffect(() => {
+    redeal();
+  }, []);
 
-    const redeal = (): void => {
-        const start = new Date(1646651697513);
-        const now = new Date();
-        const currentUtcDay = new Date(
-            now.valueOf() - (now.valueOf() % 86400000)
-        );
-        console.log(startOfDay(start), startOfDay(start).valueOf());
-        console.log(startOfDay(now), startOfDay(now).valueOf());
-        console.log(currentUtcDay, currentUtcDay.valueOf());
-        console.log(now.getUTCDate());
-        console.log(differenceInCalendarDays(start, now));
-        setCurrentDeck(new Deck());
-        setGuesses([]);
-        setCurrentGuess(0);
-        setSubmitted([]);
-        setCurrentTry(0);
-    };
+  useEffect(() => {
+    setCurrentCards(currentDeck.deal(5).map((index) => new Card(index)));
+  }, [currentDeck]);
 
-    const updateGuess = (guess: GuessData): void => {
-        const newGuesses = [...guesses];
-        newGuesses[currentGuess] = guess;
-        setGuesses(newGuesses);
-        if (!isNil(guess.suit) && !isNil(guess.value)) {
-            setCurrentGuess(currentGuess + 1);
-        }
-    };
+  useEffect(() => {
+    redeal();
+  }, [gameMode]);
 
-    const getCurrentGuess = (): GuessData => {
-        return isNil(guesses[currentGuess]) ? {} : guesses[currentGuess];
-    };
+  const redeal = (): void => {
+    const newDeck = new Deck();
+    if (gameMode === "daily") {
+      newDeck.shuffle(getStartOfUtcDay());
+    } else {
+      newDeck.shuffle();
+    }
+    setCurrentDeck(newDeck);
+    setGuesses([]);
+    setCurrentGuess(0);
+    setSubmitted([]);
+    setCurrentTry(0);
+    setComplete(false);
+  };
 
-    const getGuesses = (index: number): GuessData[] => {
-        if (currentTry === index) {
-            return guesses;
-        }
+  const updateGuess = (guess: GuessData): void => {
+    const newGuesses = [...guesses];
+    newGuesses[currentGuess] = guess;
+    setGuesses(newGuesses);
+    if (!isNil(guess.suit) && !isNil(guess.value)) {
+      setCurrentGuess(currentGuess + 1);
+    }
+  };
 
-        return isNil(submitted[index]) ? [] : submitted[index];
-    };
+  const getCurrentGuess = (): GuessData => {
+    return isNil(guesses[currentGuess]) ? {} : guesses[currentGuess];
+  };
 
-    const clickSuit = (suit: CardSuit): void => {
-        if (currentGuess >= GUESSES) {
-            return;
-        }
-        updateGuess({ ...guesses[currentGuess], suit: suit });
-    };
+  const getGuesses = (index: number): GuessData[] => {
+    if (currentTry === index) {
+      return guesses;
+    }
 
-    const clickValue = (value: CardValue): void => {
-        if (currentGuess >= GUESSES) {
-            return;
-        }
-        const existing = getCurrentGuess();
-        updateGuess({ ...existing, value: value });
-    };
+    return isNil(submitted[index]) ? [] : submitted[index];
+  };
 
-    const backspace = (): void => {
-        if (currentGuess === 0) {
-            return;
-        }
-        guesses.splice(currentGuess, 1);
-        setCurrentGuess(currentGuess - 1);
-        setGuesses([...guesses]);
-    };
+  const clickSuit = (suit: CardSuit): void => {
+    if (currentGuess >= GUESSES || complete) {
+      return;
+    }
+    updateGuess({ ...guesses[currentGuess], suit: suit });
+  };
 
-    const submit = (): void => {
-        const current = getCurrentGuess();
-        if (currentGuess >= GUESSES && currentTry < TRIES) {
-            const newSubmitted = [...submitted];
-            newSubmitted[currentTry] = guesses;
-            setCurrentTry(currentTry + 1);
-            setGuesses([]);
-            setCurrentGuess(0);
-            setSubmitted(newSubmitted);
-            return;
-        }
-        if (isNil(current.suit) || isNil(current.value)) {
-            return;
-        }
-        setCurrentGuess(currentGuess + 1);
-    };
+  const clickValue = (value: CardValue): void => {
+    if (currentGuess >= GUESSES || complete) {
+      return;
+    }
+    const existing = getCurrentGuess();
+    updateGuess({ ...existing, value: value });
+  };
 
-    console.log(currentCards);
-    return (
-        <div className={styles.container}>
-            <Head>
-                <title>Cardle</title>
-                <meta name="description" content="Cardle Game" />
-                <meta
-                    name="viewport"
-                    content="width=device-width, initial-scale=1"
-                />
-                <meta charSet="UTF-8" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <header className={styles.header}>
-                <div className={styles.headerSection}>
-                    <IconButton sx={{ color: "white" }} onClick={redeal}>
-                        <Autorenew fontSize="large" />
-                    </IconButton>
-                    <IconButton sx={{ color: "white" }} onClick={openInfoModal}>
-                        <Info fontSize="large" />
-                    </IconButton>
-                </div>
-                <h2 className={styles.headerSection}>Cardle</h2>
-                <div className={styles.headerSection}>
-                    <IconButton sx={{ color: "white" }}>
-                        <AutoGraph fontSize="large" />
-                    </IconButton>
-                    <IconButton sx={{ color: "white" }}>
-                        <Settings fontSize="large" />
-                    </IconButton>
-                </div>
-            </header>
-            <main className={styles.main}>
-                <div className={styles.gameArea}>
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(0)}
-                        submitted={currentTry > 0}
-                        currentGuess={currentGuess}
-                        active={currentTry === 0}
-                    />
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(1)}
-                        submitted={currentTry > 1}
-                        currentGuess={currentGuess}
-                        active={currentTry === 1}
-                    />
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(2)}
-                        submitted={currentTry > 2}
-                        currentGuess={currentGuess}
-                        active={currentTry === 2}
-                    />
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(3)}
-                        submitted={currentTry > 3}
-                        currentGuess={currentGuess}
-                        active={currentTry === 3}
-                    />
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(4)}
-                        submitted={currentTry > 4}
-                        currentGuess={currentGuess}
-                        active={currentTry === 4}
-                    />
-                    <GuessGroup
-                        answer={currentCards}
-                        guesses={getGuesses(5)}
-                        submitted={currentTry > 5}
-                        currentGuess={currentGuess}
-                        active={currentTry === 5}
-                    />
-                </div>
-                <div className={styles.keyboardContainer}>
-                    <div className={styles.keyboardRow}>
-                        <SuitKey onClick={clickSuit} suit="club" />
-                        <SuitKey onClick={clickSuit} suit="diamond" />
-                        <SuitKey onClick={clickSuit} suit="heart" />
-                        <SuitKey onClick={clickSuit} suit="spade" />
-                    </div>
-                    <div className={styles.keyboardRow}>
-                        <ValueKey onClick={clickValue} value="2" />
-                        <ValueKey onClick={clickValue} value="3" />
-                        <ValueKey onClick={clickValue} value="4" />
-                        <ValueKey onClick={clickValue} value="5" />
-                        <ValueKey onClick={clickValue} value="6" />
-                        <ValueKey onClick={clickValue} value="7" />
-                        <ValueKey onClick={clickValue} value="8" />
-                        <ValueKey onClick={clickValue} value="9" />
-                        <ValueKey onClick={clickValue} value="10" />
-                    </div>
-                    <div className={styles.keyboardRow}>
-                        <ActionKey onClick={submit} label="Enter" />
-                        <ValueKey onClick={clickValue} value="jack" />
-                        <ValueKey onClick={clickValue} value="queen" />
-                        <ValueKey onClick={clickValue} value="king" />
-                        <ValueKey onClick={clickValue} value="ace" />
-                        <ActionKey onClick={backspace} label="Back" />
-                    </div>
-                </div>
-                <CustomDialog
-                    id="info"
-                    title="How to Play"
-                    open={infoModalOpen}
-                    onClose={closeInfoModal}
-                >
-                    <>
-                        <Typography variant="body1">
-                            Objective: Correctly guess the 5 random cards. You
-                            get 6 guesses and will receive different information
-                            after each guess.
-                        </Typography>
-                        <Typography variant="body1">
-                            {"\u1F7EA"} = Correct suit, wrong value
-                        </Typography>
-                        <Typography variant="body1">
-                            {"\u1F7E6"} = Correct value, wrong suit
-                        </Typography>
-                        <Typography variant="body1">
-                            {"\u1F7E8"} = Correct value and suit, wrong position
-                        </Typography>
-                        <Typography variant="body1">
-                            {"\u1F7E9"} = Correct value, wrong suit
-                        </Typography>
-                    </>
-                </CustomDialog>
-            </main>
+  const backspace = (): void => {
+    if (currentGuess === 0) {
+      setGuesses([]);
+      return;
+    }
+    if (isNil(guesses[currentGuess])) {
+      setCurrentGuess(currentGuess - 1);
+      guesses.splice(currentGuess - 1, 1);
+    } else {
+      guesses.splice(currentGuess, 1);
+    }
+    setGuesses([...guesses]);
+  };
 
-            <footer className={styles.footer}>
-                <span>Made by xHergz</span>
-            </footer>
+  const submit = (): void => {
+    const current = getCurrentGuess();
+    if (currentGuess >= GUESSES && currentTry < TRIES) {
+      const newSubmitted = [...submitted];
+      newSubmitted[currentTry] = guesses;
+      setCurrentTry(currentTry + 1);
+      setGuesses([]);
+      setCurrentGuess(0);
+      setSubmitted(newSubmitted);
+      const complete = isCorrectAnswer(guesses, currentCards);
+      setComplete(complete);
+      if (complete) {
+        openStatsDialog();
+      }
+      return;
+    }
+    if (isNil(current.suit) || isNil(current.value)) {
+      return;
+    }
+    setCurrentGuess(currentGuess + 1);
+  };
+
+  const shareResults = async (): Promise<void> => {
+    let text = "";
+    const steps = complete ? currentGuess + 1 : "X";
+    if (gameMode === "daily") {
+      text += `Cardle #${getDailyNumber()} ${steps}/${TRIES}\n`;
+    } else {
+      text += `Cardle ${getGameModeLabel(gameMode)} ${steps}/${TRIES}\n`;
+    }
+
+    for (let i = 0; i < GUESSES; i++) {
+      if (isNil(submitted[i])) {
+        text += getBlankGuessEmojis().join("");
+      } else {
+        text += getGuessEmojis(submitted[i], currentCards).join("");
+      }
+      text += "\n";
+    }
+    console.log(text);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Could not write to clipboard");
+      console.error(err);
+    }
+    closeStatsDialog();
+  };
+
+  console.log(JSON.stringify(currentCards), JSON.stringify(guesses), complete);
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Cardle</title>
+        <meta name="description" content="Cardle Game" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="UTF-8" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <header className={styles.header}>
+        <div className={styles.headerSection}>
+          <IconButton sx={{ color: "white" }} onClick={redeal}>
+            <Autorenew fontSize="large" />
+          </IconButton>
+          <IconButton sx={{ color: "white" }} onClick={openInfoDialog}>
+            <Info fontSize="large" />
+          </IconButton>
         </div>
-    );
+        <h2 className={styles.headerSection}>Cardle</h2>
+        <div className={styles.headerSection}>
+          <IconButton sx={{ color: "white" }} onClick={openStatsDialog}>
+            <AutoGraph fontSize="large" />
+          </IconButton>
+          <IconButton sx={{ color: "white" }} onClick={openOptionsDialog}>
+            <Settings fontSize="large" />
+          </IconButton>
+        </div>
+      </header>
+      <main className={styles.main}>
+        <div className={styles.gameArea}>
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(0)}
+            submitted={currentTry > 0}
+            currentGuess={currentGuess}
+            active={currentTry === 0 && !complete}
+          />
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(1)}
+            submitted={currentTry > 1}
+            currentGuess={currentGuess}
+            active={currentTry === 1 && !complete}
+          />
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(2)}
+            submitted={currentTry > 2}
+            currentGuess={currentGuess}
+            active={currentTry === 2 && !complete}
+          />
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(3)}
+            submitted={currentTry > 3}
+            currentGuess={currentGuess}
+            active={currentTry === 3 && !complete}
+          />
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(4)}
+            submitted={currentTry > 4}
+            currentGuess={currentGuess}
+            active={currentTry === 4 && !complete}
+          />
+          <GuessGroup
+            answer={currentCards}
+            guesses={getGuesses(5)}
+            submitted={currentTry > 5}
+            currentGuess={currentGuess}
+            active={currentTry === 5 && !complete}
+          />
+        </div>
+        <div className={styles.keyboardContainer}>
+          <div className={styles.keyboardRow}>
+            <SuitKey onClick={clickSuit} suit="club" />
+            <SuitKey onClick={clickSuit} suit="diamond" />
+            <SuitKey onClick={clickSuit} suit="heart" />
+            <SuitKey onClick={clickSuit} suit="spade" />
+          </div>
+          <div className={styles.keyboardRow}>
+            <ValueKey onClick={clickValue} value="2" />
+            <ValueKey onClick={clickValue} value="3" />
+            <ValueKey onClick={clickValue} value="4" />
+            <ValueKey onClick={clickValue} value="5" />
+            <ValueKey onClick={clickValue} value="6" />
+            <ValueKey onClick={clickValue} value="7" />
+            <ValueKey onClick={clickValue} value="8" />
+            <ValueKey onClick={clickValue} value="9" />
+            <ValueKey onClick={clickValue} value="10" />
+          </div>
+          <div className={styles.keyboardRow}>
+            <ActionKey onClick={submit} label="Enter" />
+            <ValueKey onClick={clickValue} value="jack" />
+            <ValueKey onClick={clickValue} value="queen" />
+            <ValueKey onClick={clickValue} value="king" />
+            <ValueKey onClick={clickValue} value="ace" />
+            <ActionKey onClick={backspace} label="Back" />
+          </div>
+        </div>
+        <InfoDialog open={infoDialogOpen} onClose={closeInfoDialog} />
+        <StatisticsDialog
+          open={statsDialogOpen}
+          onClose={closeStatsDialog}
+          mode={gameMode}
+          complete={complete}
+          onShare={shareResults}
+        />
+        <OptionsDialog
+          open={optionsDialogOpen}
+          onClose={closeOptionsDialog}
+          currentMode={gameMode}
+          onChangeGameMode={setGameMode}
+        />
+      </main>
+
+      <footer className={styles.footer}>
+        <div>{getGameModeLabel(gameMode)}</div>
+        <div>Made by xHergz</div>
+        <Link href="/change-log">{VERSION}</Link>
+      </footer>
+    </div>
+  );
 };
 
 export default Home;

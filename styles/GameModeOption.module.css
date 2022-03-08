@@ -1,0 +1,46 @@
+.gameModeContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.gameModeHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gameModeTitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.gameModeDescription {
+  padding-left: 42px;
+}
+
+.tagContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.tag {
+  color: white;
+  padding: 0 8px;
+  font-weight: bolder;
+  border-radius: 4px;
+}
+
+.comingSoon {
+  background-color: orange;
+}
+
+.replayable {
+  background-color: limegreen;
+}
+
+.daily {
+  background-color: blueviolet;
+}
