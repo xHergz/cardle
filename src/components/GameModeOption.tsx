@@ -53,7 +53,6 @@ const GameModeOption: React.FunctionComponent<GameModeOptionProps> = (
   };
 
   const handleChange = (): void => {
-    console.log("change to ", props.value);
     props.onChange(props.value);
   };
 

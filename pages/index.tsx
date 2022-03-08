@@ -163,7 +163,7 @@ const Home: NextPage = () => {
 
   const shareResults = async (): Promise<void> => {
     let text = "";
-    const steps = complete ? currentGuess + 1 : "X";
+    const steps = complete ? submitted.length : "X";
     if (gameMode === "daily") {
       text += `Cardle #${getDailyNumber()} ${steps}/${TRIES}\n`;
     } else {
@@ -178,7 +178,7 @@ const Home: NextPage = () => {
       }
       text += "\n";
     }
-    console.log(text);
+
     try {
       await navigator.clipboard.writeText(text);
     } catch (err) {
@@ -188,7 +188,6 @@ const Home: NextPage = () => {
     closeStatsDialog();
   };
 
-  console.log(JSON.stringify(currentCards), JSON.stringify(guesses), complete);
   return (
     <div className={styles.container}>
       <Head>
