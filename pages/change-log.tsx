@@ -13,6 +13,18 @@ const ChangeLog: NextPage = () => {
           Back to Cardle
         </Button>
       </Link>
+      <h4>v0.1.1</h4>
+      <ul>
+        <li>Fixed the last row of emojis not being added to the share text</li>
+        <li>
+          Fixed the share button being disabled when the game is over with an
+          incorrect answer
+        </li>
+        <li>
+          Fixed the stats modal not showing when the game is ended with an
+          incorrect answer
+        </li>
+      </ul>
       <h4>v0.1.0</h4>
       <ul>
         <li>Added 2 different game modes: Daily and Classic</li>

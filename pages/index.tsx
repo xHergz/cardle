@@ -60,7 +60,15 @@ const Home: NextPage = () => {
   const [optionsDialogOpen, openOptionsDialog, closeOptionsDialog] =
     useVisibility(false);
   const [gameMode, setGameMode] = useState<GameMode>("daily");
-  const [complete, setComplete] = useState<boolean>(false);
+
+  const lastSubmission =
+    submitted.length > 0 ? submitted[submitted.length - 1] : null;
+  const complete =
+    !isNil(lastSubmission) &&
+    (isCorrectAnswer(lastSubmission, currentCards) || currentTry >= TRIES);
+  const correctAnswer = !isNil(lastSubmission)
+    ? isCorrectAnswer(lastSubmission, currentCards)
+    : false;
 
   useEffect(() => {
     redeal();
@@ -86,7 +94,6 @@ const Home: NextPage = () => {
     setCurrentGuess(0);
     setSubmitted([]);
     setCurrentTry(0);
-    setComplete(false);
   };
 
   const updateGuess = (guess: GuessData): void => {
@@ -148,9 +155,8 @@ const Home: NextPage = () => {
       setGuesses([]);
       setCurrentGuess(0);
       setSubmitted(newSubmitted);
-      const complete = isCorrectAnswer(guesses, currentCards);
-      setComplete(complete);
-      if (complete) {
+      const isCorrect = isCorrectAnswer(guesses, currentCards);
+      if (isCorrect || currentTry >= TRIES - 1) {
         openStatsDialog();
       }
       return;
@@ -170,7 +176,7 @@ const Home: NextPage = () => {
       text += `Cardle ${getGameModeLabel(gameMode)} ${steps}/${TRIES}\n`;
     }
 
-    for (let i = 0; i < GUESSES; i++) {
+    for (let i = 0; i < submitted.length; i++) {
       if (isNil(submitted[i])) {
         break;
       } else {
