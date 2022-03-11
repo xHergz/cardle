@@ -30,7 +30,7 @@ const StatisticsDialog: React.FunctionComponent<StatisticsDialogProps> = (
       <>
         <div className={styles.statsContainer}>
           {props.mode === "daily" ? (
-            <Typography>Cardle #{getDailyNumber()}</Typography>
+            <Typography>Shufle #{getDailyNumber()}</Typography>
           ) : null}
           <div className={styles.shareActions}>
             <Button

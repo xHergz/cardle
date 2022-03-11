@@ -10,9 +10,14 @@ const ChangeLog: NextPage = () => {
       <h1>Change Log</h1>
       <Link href="/">
         <Button variant="outlined" color="secondary">
-          Back to Cardle
+          Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.2</h4>
+      <ul>
+        <li>Renamed to Shufle</li>
+        <li>Added forcing HTTPS</li>
+      </ul>
       <h4>v0.1.1</h4>
       <ul>
         <li>Fixed the last row of emojis not being added to the share text</li>

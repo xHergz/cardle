@@ -1,2 +1,3 @@
-# cardle
+# Shufle
+
 A card guessing game.

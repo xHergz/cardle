@@ -171,9 +171,9 @@ const Home: NextPage = () => {
     let text = "";
     const steps = complete ? submitted.length : "X";
     if (gameMode === "daily") {
-      text += `Cardle #${getDailyNumber()} ${steps}/${TRIES}\n`;
+      text += `Shufle #${getDailyNumber()} ${steps}/${TRIES}\n`;
     } else {
-      text += `Cardle ${getGameModeLabel(gameMode)} ${steps}/${TRIES}\n`;
+      text += `Shufle ${getGameModeLabel(gameMode)} ${steps}/${TRIES}\n`;
     }
 
     for (let i = 0; i < submitted.length; i++) {
@@ -197,8 +197,8 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Cardle</title>
-        <meta name="description" content="Cardle Game" />
+        <title>Shufle</title>
+        <meta name="description" content="Shufle Game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
             <Info fontSize="large" />
           </IconButton>
         </div>
-        <h2 className={styles.headerSection}>Cardle</h2>
+        <h2 className={styles.headerSection}>Shufle</h2>
         <div className={styles.headerSection}>
           <IconButton sx={{ color: "white" }} onClick={openStatsDialog}>
             <AutoGraph fontSize="large" />
