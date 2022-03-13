@@ -4,6 +4,7 @@ import Casino from "@mui/icons-material/Casino";
 import Info from "@mui/icons-material/Info";
 import Settings from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
+import clsx from "clsx";
 
 import styles from "../../styles/NavBar.module.css";
 
@@ -19,6 +20,11 @@ export type NavBarProps = React.PropsWithChildren<{
 const NavBar: React.FunctionComponent<NavBarProps> = (
   props: NavBarProps
 ): JSX.Element => {
+  const redealButtonClasses = clsx({
+    [styles.headerIconButton]: true,
+    [styles.disabledIconButton]: props.newGameDisabled,
+  });
+
   return (
     <header className={styles.header}>
       <div className={styles.headerSection}>
@@ -29,7 +35,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = (
           <Autorenew className={styles.headerIcon} />
         </IconButton>
         <IconButton
-          className={styles.headerIconButton}
+          className={redealButtonClasses}
           onClick={props.onNewGameClick}
           disabled={props.newGameDisabled}
         >
