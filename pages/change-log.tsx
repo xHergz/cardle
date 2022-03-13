@@ -13,6 +13,20 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.3</h4>
+      <ul>
+        <li>
+          Made the header smaller on smaller screens so it takes up less room
+        </li>
+        <li>Made the header buttons smaller to fit smaller header</li>
+        <li>Moved the info button to the right side</li>
+        <li>
+          Added the `redeal` (die icon) button to differentiate from a `reset`
+          which keeps the current answer and `redeal` whichs reshuffles for a
+          new answer
+        </li>
+        <li>Added confirmation modals to reset and redeal</li>
+      </ul>
       <h4>v0.1.2</h4>
       <ul>
         <li>Renamed to Shufle</li>

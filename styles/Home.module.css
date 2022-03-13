@@ -2,16 +2,6 @@
   /*padding: 0 2rem;*/
 }
 
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: black;
-  color: white;
-  height: 64px;
-  box-shadow: 0px 4px 8px grey;
-}
-
 .main {
   min-height: calc(100vh - 64px - 32px);
   padding: 1rem;
@@ -149,22 +139,4 @@
   outline: none;
   background-color: transparent;
   cursor: pointer;
-}
-
-.headerSection {
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.headerSection:nth-child(1) {
-  justify-content: flex-start;
-}
-
-.headerSection:nth-child(2) {
-  justify-content: center;
-}
-
-.headerSection:nth-child(3) {
-  justify-content: flex-end;
 }

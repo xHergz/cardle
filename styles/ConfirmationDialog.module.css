@@ -1,0 +1,9 @@
+.confirmationActions {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.confirmationButton {
+  min-width: 96px;
+}

@@ -4,6 +4,11 @@ import CustomDialog, { CustomDailogProps } from "./CustomDialog";
 
 import styles from "../../styles/InfoDialog.module.css";
 import { SQAURE_EMOJIS } from "../constants/emoji";
+import Autorenew from "@mui/icons-material/Autorenew";
+import Casino from "@mui/icons-material/Casino";
+import Info from "@mui/icons-material/Info";
+import AutoGraph from "@mui/icons-material/AutoGraph";
+import Settings from "@mui/icons-material/Settings";
 
 export type InfoDialogProps = Pick<CustomDailogProps, "open" | "onClose">;
 
@@ -44,6 +49,24 @@ const InfoDialog: React.FunctionComponent<InfoDialogProps> = (
             </Typography>
           </div>
         </div>
+        <Typography variant="body1">
+          <strong>Buttons:</strong>
+        </Typography>
+        <Typography className={styles.buttonTip} variant="body1">
+          <Autorenew /> = Reset the current game
+        </Typography>
+        <Typography className={styles.buttonTip} variant="body1">
+          <Casino /> = Redeal and reset
+        </Typography>
+        <Typography className={styles.buttonTip} variant="body1">
+          <Info /> = Game information
+        </Typography>
+        <Typography className={styles.buttonTip} variant="body1">
+          <AutoGraph /> = Statistics
+        </Typography>
+        <Typography className={styles.buttonTip} variant="body1">
+          <Settings /> = Options
+        </Typography>
       </>
     </CustomDialog>
   );

@@ -8,3 +8,7 @@
 .dialogTitleContent {
   flex: 1;
 }
+
+.actions {
+  padding: 16px;
+}

@@ -31,6 +31,8 @@ import {
   getGuessEmojis,
   isCorrectAnswer,
 } from "../src/util/card.utils";
+import NavBar from "../src/components/NavBar";
+import ConfirmationDialog from "../src/components/ConfirmationDialog";
 
 const TRIES = 6;
 
@@ -59,6 +61,13 @@ const Home: NextPage = () => {
     useVisibility(false);
   const [optionsDialogOpen, openOptionsDialog, closeOptionsDialog] =
     useVisibility(false);
+  const [confirmResetModalOpen, openConfirmResetModal, closeConfirmResetModal] =
+    useVisibility(false);
+  const [
+    confirmRedealModalOpen,
+    openConfirmRedealModal,
+    closeConfirmRedealModal,
+  ] = useVisibility(false);
   const [gameMode, setGameMode] = useState<GameMode>("daily");
 
   const lastSubmission =
@@ -82,6 +91,14 @@ const Home: NextPage = () => {
     redeal();
   }, [gameMode]);
 
+  const reset = (): void => {
+    setGuesses([]);
+    setCurrentGuess(0);
+    setSubmitted([]);
+    setCurrentTry(0);
+    closeConfirmResetModal();
+  };
+
   const redeal = (): void => {
     const newDeck = new Deck();
     if (gameMode === "daily") {
@@ -90,10 +107,8 @@ const Home: NextPage = () => {
       newDeck.shuffle();
     }
     setCurrentDeck(newDeck);
-    setGuesses([]);
-    setCurrentGuess(0);
-    setSubmitted([]);
-    setCurrentTry(0);
+    reset();
+    closeConfirmRedealModal();
   };
 
   const updateGuess = (guess: GuessData): void => {
@@ -204,25 +219,14 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <header className={styles.header}>
-        <div className={styles.headerSection}>
-          <IconButton sx={{ color: "white" }} onClick={redeal}>
-            <Autorenew fontSize="large" />
-          </IconButton>
-          <IconButton sx={{ color: "white" }} onClick={openInfoDialog}>
-            <Info fontSize="large" />
-          </IconButton>
-        </div>
-        <h2 className={styles.headerSection}>Shufle</h2>
-        <div className={styles.headerSection}>
-          <IconButton sx={{ color: "white" }} onClick={openStatsDialog}>
-            <AutoGraph fontSize="large" />
-          </IconButton>
-          <IconButton sx={{ color: "white" }} onClick={openOptionsDialog}>
-            <Settings fontSize="large" />
-          </IconButton>
-        </div>
-      </header>
+      <NavBar
+        onResetGameClick={openConfirmResetModal}
+        onNewGameClick={openConfirmRedealModal}
+        onInfoClick={openInfoDialog}
+        onStatsClick={openStatsDialog}
+        onOptionsClick={openOptionsDialog}
+        newGameDisabled={gameMode === "daily"}
+      />
       <main className={styles.main}>
         <div className={styles.gameArea}>
           <GuessGroup
@@ -308,6 +312,20 @@ const Home: NextPage = () => {
           onClose={closeOptionsDialog}
           currentMode={gameMode}
           onChangeGameMode={setGameMode}
+        />
+        <ConfirmationDialog
+          title="Confirm Reset"
+          open={confirmResetModalOpen}
+          onClose={closeConfirmResetModal}
+          onConfirm={reset}
+          text="Are you sure you want to reset your current game? You will lose your progress."
+        />
+        <ConfirmationDialog
+          title="Confirm Redeal"
+          open={confirmRedealModalOpen}
+          onClose={closeConfirmRedealModal}
+          onConfirm={redeal}
+          text="Are you sure you want to redeal your current game? You will lose your progress."
         />
       </main>
 

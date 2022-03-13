@@ -16,6 +16,7 @@ type CustomProps = {
   id: string;
   title: string;
   onClose?: () => void;
+  actions?: JSX.Element;
 };
 
 export type CustomDialogTitleProps = React.PropsWithChildren<CustomProps>;
@@ -58,7 +59,11 @@ const CustomDialog: React.FunctionComponent<CustomDailogProps> = (
         onClose={props.onClose}
       />
       <DialogContent>{props.children}</DialogContent>
-      <DialogActions></DialogActions>
+      {!isNil(props.actions) ? (
+        <DialogActions className={styles.actions}>
+          {props.actions}
+        </DialogActions>
+      ) : null}
     </Dialog>
   );
 };
