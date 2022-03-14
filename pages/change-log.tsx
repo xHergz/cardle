@@ -13,6 +13,13 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.4</h4>
+      <ul>
+        <li>
+          Fixed some styling issues where styles were not applying to different
+          screen sizes correctly
+        </li>
+      </ul>
       <h4>v0.1.3</h4>
       <ul>
         <li>

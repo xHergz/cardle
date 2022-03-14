@@ -4,11 +4,8 @@ import Casino from "@mui/icons-material/Casino";
 import Info from "@mui/icons-material/Info";
 import Settings from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
-import clsx from "clsx";
 
-import { withStyles } from "../util/style.utils";
-
-import styles from "../../styles/NavBar.module.css";
+import { makeStyles, withStyles } from "../util/style.utils";
 
 export type NavBarProps = React.PropsWithChildren<{
   onResetGameClick: () => void;
@@ -19,58 +16,82 @@ export type NavBarProps = React.PropsWithChildren<{
   newGameDisabled: boolean;
 }>;
 
+const useStyles = makeStyles()({
+  headerSection: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    ":nth-child(1)": {
+      justifyContent: "flex-start",
+    },
+    ":nth-child(2)": {
+      justifyContent: "center",
+      flex: 0,
+    },
+    ":nth-child(3)": {
+      justifyContent: "flex-end",
+    },
+  },
+});
+
 const NavBar: React.FunctionComponent<NavBarProps> = (
   props: NavBarProps
 ): JSX.Element => {
-  const redealButtonClasses = clsx({
-    [styles.headerIconButton]: true,
-    [styles.disabledIconButton]: props.newGameDisabled,
-  });
-
+  const { classes } = useStyles();
   return (
-    <header className={styles.header}>
-      <div className={styles.headerSection}>
-        <IconButton
-          className={styles.headerIconButton}
-          onClick={props.onResetGameClick}
-        >
-          <Autorenew className={styles.headerIcon} />
-        </IconButton>
+    <StyledHeader>
+      <div className={classes.headerSection}>
+        <WhiteIconButton onClick={props.onResetGameClick}>
+          <Autorenew fontSize="inherit" />
+        </WhiteIconButton>
         <WhiteIconButton
           onClick={props.onNewGameClick}
           disabled={props.newGameDisabled}
         >
-          <Casino className={styles.headerIcon} />
+          <Casino fontSize="inherit" />
         </WhiteIconButton>
       </div>
-      <h2 className={styles.headerSection}>Shufle</h2>
-      <div className={styles.headerSection}>
-        <IconButton
-          className={styles.headerIconButton}
-          onClick={props.onInfoClick}
-        >
-          <Info className={styles.headerIcon} />
-        </IconButton>
-        <IconButton
-          className={styles.headerIconButton}
-          onClick={props.onStatsClick}
-        >
-          <AutoGraph className={styles.headerIcon} />
-        </IconButton>
-        <IconButton
-          className={styles.headerIconButton}
-          onClick={props.onOptionsClick}
-        >
-          <Settings className={styles.headerIcon} />
-        </IconButton>
+      <h2 className={classes.headerSection}>Shufle</h2>
+      <div className={classes.headerSection}>
+        <WhiteIconButton onClick={props.onInfoClick}>
+          <Info fontSize="inherit" />
+        </WhiteIconButton>
+        <WhiteIconButton onClick={props.onStatsClick}>
+          <AutoGraph fontSize="inherit" />
+        </WhiteIconButton>
+        <WhiteIconButton onClick={props.onOptionsClick}>
+          <Settings fontSize="inherit" />
+        </WhiteIconButton>
       </div>
-    </header>
+    </StyledHeader>
   );
 };
 
+const StyledHeader = withStyles("header", (theme) => ({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+    height: "48px",
+    boxShadow: "0px 4px 8px grey",
+    [theme.breakpoints.up("md")]: {
+      height: "64px",
+    },
+  },
+}));
+
 const WhiteIconButton = withStyles(IconButton, (theme) => ({
   root: {
-    color: "white",
+    color: theme.palette.common.white,
+    fontSize: "1.5rem",
+    [theme.breakpoints.only("sm")]: {
+      fontSize: "2rem",
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "2.1875rem",
+    },
   },
 }));
 

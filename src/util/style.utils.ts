@@ -1,4 +1,5 @@
 import { useTheme } from "@mui/material";
-import { createWithStyles } from "tss-react";
+import { createMakeStyles, createWithStyles } from "tss-react";
 
+export const { makeStyles } = createMakeStyles({ useTheme });
 export const { withStyles } = createWithStyles({ useTheme });

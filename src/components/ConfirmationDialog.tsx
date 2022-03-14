@@ -1,8 +1,7 @@
 import { Button, Typography } from "@mui/material";
 
+import { withStyles } from "../util/style.utils";
 import CustomDialog, { CustomDailogProps } from "./CustomDialog";
-
-import styles from "../../styles/ConfirmationDialog.module.css";
 
 export type ConfirmationDialogProps = Pick<
   CustomDailogProps,
@@ -22,22 +21,14 @@ const ConfirmationDialog: React.FunctionComponent<ConfirmationDialogProps> = (
       open={props.open}
       onClose={props.onClose}
       actions={
-        <div className={styles.confirmationActions}>
-          <Button
-            variant="outlined"
-            className={styles.confirmationButton}
-            onClick={props.onClose}
-          >
+        <ConfirmationActions>
+          <ConfirmationButton variant="outlined" onClick={props.onClose}>
             No
-          </Button>
-          <Button
-            variant="contained"
-            className={styles.confirmationButton}
-            onClick={props.onConfirm}
-          >
+          </ConfirmationButton>
+          <ConfirmationButton variant="contained" onClick={props.onConfirm}>
             Yes
-          </Button>
-        </div>
+          </ConfirmationButton>
+        </ConfirmationActions>
       }
     >
       <>
@@ -46,5 +37,19 @@ const ConfirmationDialog: React.FunctionComponent<ConfirmationDialogProps> = (
     </CustomDialog>
   );
 };
+
+const ConfirmationActions = withStyles("div", () => ({
+  root: {
+    display: "flex",
+    justifyContent: "space-between",
+    flex: 1,
+  },
+}));
+
+const ConfirmationButton = withStyles(Button, () => ({
+  root: {
+    minWidth: "96px",
+  },
+}));
 
 export default ConfirmationDialog;
