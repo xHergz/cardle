@@ -6,6 +6,8 @@ import Settings from "@mui/icons-material/Settings";
 import { IconButton } from "@mui/material";
 import clsx from "clsx";
 
+import { withStyles } from "../util/style.utils";
+
 import styles from "../../styles/NavBar.module.css";
 
 export type NavBarProps = React.PropsWithChildren<{
@@ -34,13 +36,12 @@ const NavBar: React.FunctionComponent<NavBarProps> = (
         >
           <Autorenew className={styles.headerIcon} />
         </IconButton>
-        <IconButton
-          className={redealButtonClasses}
+        <WhiteIconButton
           onClick={props.onNewGameClick}
           disabled={props.newGameDisabled}
         >
           <Casino className={styles.headerIcon} />
-        </IconButton>
+        </WhiteIconButton>
       </div>
       <h2 className={styles.headerSection}>Shufle</h2>
       <div className={styles.headerSection}>
@@ -66,5 +67,11 @@ const NavBar: React.FunctionComponent<NavBarProps> = (
     </header>
   );
 };
+
+const WhiteIconButton = withStyles(IconButton, (theme) => ({
+  root: {
+    color: "white",
+  },
+}));
 
 export default NavBar;

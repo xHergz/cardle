@@ -8,7 +8,7 @@ const ChangeLog: NextPage = () => {
   return (
     <div className={styles.changeLog}>
       <h1>Change Log</h1>
-      <Link href="/">
+      <Link href="/" passHref>
         <Button variant="outlined" color="secondary">
           Back to Shufle
         </Button>
