@@ -13,6 +13,16 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.5</h4>
+      <ul>
+        <li>
+          Fixed the share results text saying 6/6 when you did not get the
+          correct answer (now says X/6)
+        </li>
+        <li>
+          Fixed the emojis in the legend not showing up on some phones/browsers
+        </li>
+      </ul>
       <h4>v0.1.4</h4>
       <ul>
         <li>

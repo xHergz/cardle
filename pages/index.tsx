@@ -33,8 +33,8 @@ import {
 } from "../src/util/card.utils";
 import NavBar from "../src/components/NavBar";
 import ConfirmationDialog from "../src/components/ConfirmationDialog";
-
-const TRIES = 6;
+import { MAX_TRIES } from "../src/constants/rules";
+import { createSharableResult } from "../src/util/result.utils";
 
 const THE_BEGINNING = 1646651697513;
 
@@ -74,7 +74,7 @@ const Home: NextPage = () => {
     submitted.length > 0 ? submitted[submitted.length - 1] : null;
   const complete =
     !isNil(lastSubmission) &&
-    (isCorrectAnswer(lastSubmission, currentCards) || currentTry >= TRIES);
+    (isCorrectAnswer(lastSubmission, currentCards) || currentTry >= MAX_TRIES);
   const correctAnswer = !isNil(lastSubmission)
     ? isCorrectAnswer(lastSubmission, currentCards)
     : false;
@@ -163,7 +163,7 @@ const Home: NextPage = () => {
 
   const submit = (): void => {
     const current = getCurrentGuess();
-    if (currentGuess >= GUESSES && currentTry < TRIES) {
+    if (currentGuess >= GUESSES && currentTry < MAX_TRIES) {
       const newSubmitted = [...submitted];
       newSubmitted[currentTry] = guesses;
       setCurrentTry(currentTry + 1);
@@ -171,7 +171,7 @@ const Home: NextPage = () => {
       setCurrentGuess(0);
       setSubmitted(newSubmitted);
       const isCorrect = isCorrectAnswer(guesses, currentCards);
-      if (isCorrect || currentTry >= TRIES - 1) {
+      if (isCorrect || currentTry >= MAX_TRIES - 1) {
         openStatsDialog();
       }
       return;
@@ -183,22 +183,12 @@ const Home: NextPage = () => {
   };
 
   const shareResults = async (): Promise<void> => {
-    let text = "";
-    const steps = complete ? submitted.length : "X";
-    if (gameMode === "daily") {
-      text += `Shufle #${getDailyNumber()} ${steps}/${TRIES}\n`;
-    } else {
-      text += `Shufle ${getGameModeLabel(gameMode)} ${steps}/${TRIES}\n`;
-    }
-
-    for (let i = 0; i < submitted.length; i++) {
-      if (isNil(submitted[i])) {
-        break;
-      } else {
-        text += getGuessEmojis(submitted[i], currentCards).join("");
-      }
-      text += "\n";
-    }
+    const text = createSharableResult(
+      gameMode,
+      currentCards,
+      correctAnswer,
+      submitted
+    );
 
     try {
       await navigator.clipboard.writeText(text);
