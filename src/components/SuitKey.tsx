@@ -1,25 +1,24 @@
-import React from "react";
 import { CardSuit } from "../lib/card";
 import Key from "./Key";
-import { getSuitEmoji } from "../util/card.utils";
+import SuitIcon from "./SuitIcon";
 
 export type SuitKeyProps = React.PropsWithChildren<{
-    suit: CardSuit;
-    onClick: (suit: CardSuit) => void;
+  suit: CardSuit;
+  onClick: (suit: CardSuit) => void;
 }>;
 
 const SuitKey: React.FunctionComponent<SuitKeyProps> = (
-    props: SuitKeyProps
+  props: SuitKeyProps
 ): JSX.Element => {
-    const clickHandler = (): void => {
-        props.onClick(props.suit);
-    };
+  const clickHandler = (): void => {
+    props.onClick(props.suit);
+  };
 
-    return (
-        <Key onClick={clickHandler} double={false}>
-            {getSuitEmoji(props.suit)}
-        </Key>
-    );
+  return (
+    <Key onClick={clickHandler} double={false}>
+      <SuitIcon suit={props.suit} />
+    </Key>
+  );
 };
 
 export default SuitKey;
