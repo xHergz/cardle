@@ -39,3 +39,22 @@ export const getDailyNumber = (): number => {
   const first = new Date(FIRST_DAILY_PUZZLE);
   return differenceInCalendarDays(today, first) + 1;
 };
+
+export const getResultMessage = (submissions: number): string => {
+  switch (submissions) {
+    case 1:
+      return "Impossible!";
+    case 2:
+      return "Unbelievable!";
+    case 3:
+      return "Excellent";
+    case 4:
+      return "Great Work";
+    case 5:
+      return "Well Done";
+    case 6:
+      return "Good Stuff";
+    default:
+      return "Nice Try";
+  }
+};

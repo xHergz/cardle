@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Snackbar, Typography } from "@mui/material";
 import AutoGraph from "@mui/icons-material/AutoGraph";
 import Autorenew from "@mui/icons-material/Autorenew";
 import Info from "@mui/icons-material/Info";
@@ -23,7 +23,11 @@ import InfoDialog from "../src/components/InfoDialog";
 import StatisticsDialog from "../src/components/StatisticsDialog";
 import OptionsDialog from "../src/components/OptionsDialog";
 import { GameMode } from "../src/components/GameModeOption";
-import { getDailyNumber, getStartOfUtcDay } from "../src/util/common.util";
+import {
+  getDailyNumber,
+  getResultMessage,
+  getStartOfUtcDay,
+} from "../src/util/common.util";
 import { VERSION } from "../src/constants/version";
 import { getGameModeLabel } from "../src/util/game-mode.util";
 import {
@@ -55,6 +59,10 @@ const Home: NextPage = () => {
   const [currentGuess, setCurrentGuess] = useState<number>(0);
   const [submitted, setSubmitted] = useState<GuessData[][]>([]);
   const [currentTry, setCurrentTry] = useState<number>(0);
+  const [resultToastOpen, openResultToast, closeResultToast] =
+    useVisibility(false);
+  const [copiedToastOpen, openCopiedToast, closeCopiedToast] =
+    useVisibility(false);
   const [infoDialogOpen, openInfoDialog, closeInfoDialog] =
     useVisibility(false);
   const [statsDialogOpen, openStatsDialog, closeStatsDialog] =
@@ -172,7 +180,10 @@ const Home: NextPage = () => {
       setSubmitted(newSubmitted);
       const isCorrect = isCorrectAnswer(guesses, currentCards);
       if (isCorrect || currentTry >= MAX_TRIES - 1) {
-        openStatsDialog();
+        setTimeout(() => {
+          openStatsDialog();
+        }, 3000);
+        openResultToast();
       }
       return;
     }
@@ -197,6 +208,7 @@ const Home: NextPage = () => {
       console.error(err);
     }
     closeStatsDialog();
+    openCopiedToast();
   };
 
   return (
@@ -289,6 +301,18 @@ const Home: NextPage = () => {
             <ActionKey onClick={backspace} label="Back" />
           </div>
         </div>
+        <Snackbar
+          open={resultToastOpen}
+          autoHideDuration={3000}
+          onClose={closeResultToast}
+          message={getResultMessage(submitted.length)}
+        />
+        <Snackbar
+          open={copiedToastOpen}
+          autoHideDuration={3000}
+          onClose={closeCopiedToast}
+          message="Copied to clipboard"
+        />
         <InfoDialog open={infoDialogOpen} onClose={closeInfoDialog} />
         <StatisticsDialog
           open={statsDialogOpen}
