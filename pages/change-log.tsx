@@ -13,6 +13,17 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.6</h4>
+      <ul>
+        <li>
+          Added icons for the card suits instead of emojis because emojis are
+          unreliable in the browser
+        </li>
+        <li>
+          Added toasts for some actions (i.e. finishing the game and copying
+          results)
+        </li>
+      </ul>
       <h4>v0.1.5</h4>
       <ul>
         <li>
