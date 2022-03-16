@@ -19,25 +19,38 @@ const GuessGroup: React.FunctionComponent<GuessGroupProps> = (
   props: GuessGroupProps
 ): JSX.Element => {
   const getStatus = (index: number): GuessStatus => {
-    const guess = props.guesses[index];
+    const currentGuess = props.guesses[index];
     const card = props.answer[index];
 
-    if (isNil(guess) || !props.submitted) {
+    if (isNil(currentGuess) || !props.submitted) {
       return "guess";
     } else if (isNil(card)) {
       return "error";
     }
 
-    const matchIndex = props.answer.findIndex(
-      (card) => card.suit === guess.suit && card.value === guess.value
+    const duplicateGuessIndex = props.guesses.findIndex(
+      (guess) =>
+        guess.suit === currentGuess.suit && guess.value === currentGuess.value
     );
+    const matchIndex = props.answer.findIndex(
+      (card) =>
+        card.suit === currentGuess.suit && card.value === currentGuess.value
+    );
+    const matchAlreadyCorrect =
+      matchIndex !== -1 &&
+      props.guesses[matchIndex].suit === props.answer[matchIndex].suit &&
+      props.guesses[matchIndex].value === props.answer[matchIndex].value;
     if (matchIndex === index) {
       return "correct";
-    } else if (matchIndex !== -1) {
+    } else if (
+      matchIndex !== -1 &&
+      duplicateGuessIndex === index &&
+      !matchAlreadyCorrect
+    ) {
       return "wrongPosition";
-    } else if (guess.suit === card.suit) {
+    } else if (currentGuess.suit === card.suit) {
       return "correctSuit";
-    } else if (guess.value === card.value) {
+    } else if (currentGuess.value === card.value) {
       return "correctValue";
     }
 
