@@ -1,109 +1,118 @@
 .guessGroup {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 8px;
-    padding: 4px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
 }
 
 .guess {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    border: 1px solid black;
-    border-radius: 8px;
-    height: 50px;
-    width: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 8px;
+  height: 50px;
+  width: 50px;
+}
+
+.flipped {
+  background: rgb(255, 255, 255);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 0, 0, 1) 100%
+  );
 }
 
 .notFound {
-    background-color: gray;
-    animation: toNotFound 1s forwards;
+  background-color: gray;
+  animation: toNotFound 1s forwards;
 }
 
 @keyframes toNotFound {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: gray;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: gray;
+  }
 }
 
 .correctSuit {
-    background-color: mediumorchid;
-    animation: toCorrectSuit 1s forwards;
+  background-color: mediumorchid;
+  animation: toCorrectSuit 1s forwards;
 }
 
 @keyframes toCorrectSuit {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: mediumorchid;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: mediumorchid;
+  }
 }
 
 .correctValue {
-    background-color: cadetblue;
-    animation: toCorrectValue 1s forwards;
+  background-color: cadetblue;
+  animation: toCorrectValue 1s forwards;
 }
 
 @keyframes toCorrectValue {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: cadetblue;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: cadetblue;
+  }
 }
 
 .wrongPosition {
-    background-color: darkkhaki;
-    animation: toWrongPosition 1s forwards;
+  background-color: darkkhaki;
+  animation: toWrongPosition 1s forwards;
 }
 
 @keyframes toWrongPosition {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: darkkhaki;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: darkkhaki;
+  }
 }
 
 .correct {
-    background-color: forestgreen;
-    animation: toCorrect 1s forwards;
+  background-color: forestgreen;
+  animation: toCorrect 1s forwards;
 }
 
 @keyframes toCorrect {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: forestgreen;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: forestgreen;
+  }
 }
 
 .error {
-    background-color: darksalmon;
-    animation: toError 1s forwards;
+  background-color: darksalmon;
+  animation: toError 1s forwards;
 }
 
 @keyframes toError {
-    from {
-        background-color: transparent;
-    }
-    to {
-        background-color: darksalmon;
-    }
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: darksalmon;
+  }
 }
 
 .activeGuess {
-    transition: all 0.2s ease-in-out;
-    transform: scale(1.1);
-    box-shadow: 0px 4px 8px grey;
+  transition: all 0.2s ease-in-out;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 8px grey;
 }

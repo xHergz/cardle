@@ -25,6 +25,7 @@ export type GuessProps = React.PropsWithChildren<{
   guess?: GuessData;
   status?: GuessStatus;
   active?: boolean;
+  flipped?: boolean;
 }>;
 
 const Guess: React.FunctionComponent<GuessProps> = (
@@ -32,6 +33,7 @@ const Guess: React.FunctionComponent<GuessProps> = (
 ): JSX.Element => {
   const classes = clsx({
     [styles.guess]: true,
+    [styles.flipped]: props.flipped,
     [styles.notFound]: props.status === "notFound",
     [styles.correctSuit]: props.status === "correctSuit",
     [styles.correctValue]: props.status === "correctValue",
@@ -58,9 +60,13 @@ const Guess: React.FunctionComponent<GuessProps> = (
 
   return (
     <div className={classes}>
-      <Typography variant="body1">{getLabel()}</Typography>
-      {!isNil(props.guess) && !isNil(props.guess.suit) ? (
-        <SuitIcon suit={props.guess.suit} />
+      {!props.flipped ? (
+        <>
+          <Typography variant="body1">{getLabel()}</Typography>
+          {!isNil(props.guess) && !isNil(props.guess.suit) ? (
+            <SuitIcon suit={props.guess.suit} />
+          ) : null}
+        </>
       ) : null}
     </div>
   );

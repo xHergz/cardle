@@ -29,9 +29,10 @@ export const random = (seed: number) => {
   return x - Math.floor(x);
 };
 
-export const getStartOfUtcDay = (): number => {
-  const now = new Date();
-  return new Date(now.valueOf() - (now.valueOf() % 86400000)).valueOf();
+export const getStartOfUtcDay = (startingPoint: Date = new Date()): number => {
+  return new Date(
+    startingPoint.valueOf() - (startingPoint.valueOf() % 86400000)
+  ).valueOf();
 };
 
 export const getDailyNumber = (): number => {

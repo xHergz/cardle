@@ -211,6 +211,7 @@ const Home: NextPage = () => {
     openCopiedToast();
   };
 
+  console.log(complete);
   return (
     <div className={styles.container}>
       <Head>
@@ -320,6 +321,7 @@ const Home: NextPage = () => {
           mode={gameMode}
           complete={complete}
           onShare={shareResults}
+          answer={currentCards}
         />
         <OptionsDialog
           open={optionsDialogOpen}
