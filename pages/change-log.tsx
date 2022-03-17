@@ -13,6 +13,26 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.7</h4>
+      <ul>
+        <li>
+          Added an answer to the Stats Dialog. This can optionally be shown
+          after you complete the game by clicking the eyeball icon. If you would
+          like to reset and continue you still can!
+        </li>
+        <li>
+          Added a timer counting down to the next daily puzzle in the Stats
+          Dialog
+        </li>
+        <li>
+          Fixed the colouring of yellow guesses. Only the the appropriate number
+          of guess will be yellow if there are duplicates. For example, if you
+          guess the same card 5 times and one is correct only the one in the
+          correct spot will turn green. If you guess the same card twice and
+          neither are in the correct spot only the first one will turn yellow
+          instead of both.
+        </li>
+      </ul>
       <h4>v0.1.6</h4>
       <ul>
         <li>
