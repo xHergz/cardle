@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "../styles/ChangeLog.module.css";
 
 const ChangeLog: NextPage = () => {
-  console.log(process.env.TEST);
+  console.log(process.env.NEXT_PUBLIC_TEST);
   return (
     <div className={styles.changeLog}>
       <h2>Change Log</h2>
