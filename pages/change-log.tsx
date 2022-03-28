@@ -5,9 +5,10 @@ import Link from "next/link";
 import styles from "../styles/ChangeLog.module.css";
 
 const ChangeLog: NextPage = () => {
+  console.log(process.env.TEST);
   return (
     <div className={styles.changeLog}>
-      <h1>Change Log</h1>
+      <h2>Change Log</h2>
       <Link href="/" passHref>
         <Button variant="outlined" color="secondary">
           Back to Shufle
