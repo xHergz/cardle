@@ -18,7 +18,7 @@ jobs:
 
       # Set up the env file
       - name: Set up the env file
-        run: cd $GITHUB_WORKSPACE && touch .env && echo TEST="Testing 1 2 3" >> .env && cat .env
+        run: cd $GITHUB_WORKSPACE && touch .env.production.local && echo TEST="Testing 1 2 3" >> .env.production.local && cat .env.production.local
 
       # Builds the app
       - name: Building the app
