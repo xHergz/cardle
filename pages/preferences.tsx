@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import { NextPage } from "next";
+import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -40,6 +41,9 @@ const Preferences: NextPage = () => {
 
   return (
     <div className={classes.container}>
+      <Head>
+        <title>Shufle - Preferences</title>
+      </Head>
       <h2>Shufle Preferences</h2>
       <Link href="/" passHref>
         <Button variant="outlined" color="secondary">
