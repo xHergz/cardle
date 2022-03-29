@@ -18,7 +18,11 @@ jobs:
 
       # Set up the env file
       - name: Set up the env file
-        run: cd $GITHUB_WORKSPACE && touch .env.local && echo NEXT_PUBLIC_TEST="Testing 1 2 3" >> .env.local && cat .env.local
+        run: |
+          cd $GITHUB_WORKSPACE
+          touch .env.local
+          echo NEXT_PUBLIC_SHUFLE_ENVIRONMENT=alpha >> .env.local
+          cat .env.local
 
       # Builds the app
       - name: Building the app
