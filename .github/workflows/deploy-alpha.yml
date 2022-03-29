@@ -22,7 +22,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           touch .env.local
           echo NEXT_PUBLIC_SHUFLE_ENVIRONMENT=alpha >> .env.local
-          echo NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.MIXPANEL_ALPHA_TOKEN }} >> .env.local
+          echo "NEXT_PUBLIC_MIXPANEL_TOKEN=${{ secrets.MIXPANEL_ALPHA_TOKEN }}" >> .env.local
 
       # Builds the app
       - name: Building the app
