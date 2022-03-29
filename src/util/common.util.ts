@@ -41,7 +41,10 @@ export const getDailyNumber = (): number => {
   return differenceInCalendarDays(today, first) + 1;
 };
 
-export const getResultMessage = (submissions: number): string => {
+export const getResultMessage = (
+  submissions: number,
+  correct: boolean
+): string => {
   switch (submissions) {
     case 1:
       return "Impossible!";
@@ -54,7 +57,7 @@ export const getResultMessage = (submissions: number): string => {
     case 5:
       return "Well Done";
     case 6:
-      return "Good Stuff";
+      return correct ? "Good Stuff" : "Nice Try";
     default:
       return "Nice Try";
   }

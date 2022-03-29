@@ -39,6 +39,9 @@ import NavBar from "../src/components/NavBar";
 import ConfirmationDialog from "../src/components/ConfirmationDialog";
 import { MAX_TRIES } from "../src/constants/rules";
 import { createSharableResult } from "../src/util/result.utils";
+import { getSettings } from "../src/lib/settings";
+import Analytics from "../src/lib/analytics";
+import CookieBanner from "../src/components/banners/CookieBanner";
 
 const THE_BEGINNING = 1646651697513;
 
@@ -88,7 +91,7 @@ const Home: NextPage = () => {
     : false;
 
   useEffect(() => {
-    redeal();
+    Analytics.trackEvent("GAME_STARTED");
   }, []);
 
   useEffect(() => {
@@ -184,6 +187,11 @@ const Home: NextPage = () => {
           openStatsDialog();
         }, 3000);
         openResultToast();
+        Analytics.trackEvent("GAME_ENDED", {
+          gameMode: gameMode,
+          isCorrect: isCorrect,
+          tries: currentTry + 1,
+        });
       }
       return;
     }
@@ -209,6 +217,22 @@ const Home: NextPage = () => {
     }
     closeStatsDialog();
     openCopiedToast();
+    Analytics.trackEvent("RESULTS_SHARED", { gameMode: gameMode });
+  };
+
+  const clickReset = (): void => {
+    reset();
+    Analytics.trackEvent("GAME_RESET", { gameMode: gameMode });
+  };
+
+  const clickRedeal = (): void => {
+    redeal();
+    Analytics.trackEvent("GAME_REDEALT", { gameMode: gameMode });
+  };
+
+  const changeGameMode = (newMode: GameMode): void => {
+    setGameMode(newMode);
+    Analytics.trackEvent("GAME_TYPE_CHANGED", { gameMode: newMode });
   };
 
   return (
@@ -305,7 +329,7 @@ const Home: NextPage = () => {
           open={resultToastOpen}
           autoHideDuration={3000}
           onClose={closeResultToast}
-          message={getResultMessage(submitted.length)}
+          message={getResultMessage(submitted.length, correctAnswer)}
         />
         <Snackbar
           open={copiedToastOpen}
@@ -326,22 +350,23 @@ const Home: NextPage = () => {
           open={optionsDialogOpen}
           onClose={closeOptionsDialog}
           currentMode={gameMode}
-          onChangeGameMode={setGameMode}
+          onChangeGameMode={changeGameMode}
         />
         <ConfirmationDialog
           title="Confirm Reset"
           open={confirmResetModalOpen}
           onClose={closeConfirmResetModal}
-          onConfirm={reset}
+          onConfirm={clickReset}
           text="Are you sure you want to reset your current game? You will lose your progress."
         />
         <ConfirmationDialog
           title="Confirm Redeal"
           open={confirmRedealModalOpen}
           onClose={closeConfirmRedealModal}
-          onConfirm={redeal}
+          onConfirm={clickRedeal}
           text="Are you sure you want to redeal your current game? You will lose your progress."
         />
+        <CookieBanner />
       </main>
 
       <footer className={styles.footer}>

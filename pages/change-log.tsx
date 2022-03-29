@@ -1,19 +1,34 @@
 import { Button } from "@mui/material";
 import { NextPage } from "next";
+import Head from "next/head";
 import Link from "next/link";
 
 import styles from "../styles/ChangeLog.module.css";
 
 const ChangeLog: NextPage = () => {
-  console.log(process.env.NEXT_PUBLIC_TEST);
   return (
     <div className={styles.changeLog}>
+      <Head>
+        <title>Shufle - Change Log</title>
+      </Head>
       <h2>Change Log</h2>
       <Link href="/" passHref>
         <Button variant="outlined" color="secondary">
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.8</h4>
+      <ul>
+        <li>Added a banner to allow people to opt in to anonymous analytics</li>
+        <li>
+          Added analytics to different game actions (game started, game
+          finished, game mode changed, etc) to track interaction
+        </li>
+        <li>Added the privacy policy and preferences pages</li>
+        <li>
+          Fixed the result message for 6 tries and a win vs 6 tries and a loss
+        </li>
+      </ul>
       <h4>v0.1.7</h4>
       <ul>
         <li>
