@@ -1,4 +1,5 @@
 export type ShufleEvent =
+  | "GAME_LOADED"
   | "GAME_STARTED"
   | "GAME_ENDED"
   | "GAME_RESET"

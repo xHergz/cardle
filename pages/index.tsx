@@ -91,7 +91,7 @@ const Home: NextPage = () => {
     : false;
 
   useEffect(() => {
-    Analytics.trackEvent("GAME_STARTED");
+    Analytics.trackEvent("GAME_LOADED");
   }, []);
 
   useEffect(() => {
@@ -175,6 +175,9 @@ const Home: NextPage = () => {
   const submit = (): void => {
     const current = getCurrentGuess();
     if (currentGuess >= GUESSES && currentTry < MAX_TRIES) {
+      if (currentTry === 0) {
+        Analytics.trackEvent("GAME_STARTED");
+      }
       const newSubmitted = [...submitted];
       newSubmitted[currentTry] = guesses;
       setCurrentTry(currentTry + 1);
