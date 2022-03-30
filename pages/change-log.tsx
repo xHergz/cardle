@@ -17,6 +17,16 @@ const ChangeLog: NextPage = () => {
           Back to Shufle
         </Button>
       </Link>
+      <h4>v0.1.9</h4>
+      <ul>
+        <li>
+          Added a dialog to alert people the main site is ready (not used yet)
+        </li>
+        <li>
+          Changed how the game started event is tracked. Now it is tracked when
+          the user submits their first guess rather than when the page loads.
+        </li>
+      </ul>
       <h4>v0.1.8</h4>
       <ul>
         <li>Added a banner to allow people to opt in to anonymous analytics</li>
