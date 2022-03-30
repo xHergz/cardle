@@ -4,7 +4,7 @@ import {
   allowAnalytics,
   analyticsSet,
   denyAnalytics,
-} from "../../util/analytics";
+} from "../../util/settings";
 import { useVisibility } from "../../util/hooks.util";
 import { makeStyles } from "../../util/style.utils";
 import BottomBanner from "./BottomBanner";

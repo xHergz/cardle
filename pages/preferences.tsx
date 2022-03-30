@@ -7,7 +7,7 @@ import {
   allowAnalytics,
   analyticsAllowed,
   denyAnalytics,
-} from "../src/util/analytics";
+} from "../src/util/settings";
 
 import { makeStyles } from "../src/util/style.utils";
 

@@ -17,3 +17,12 @@ export const allowAnalytics = (): void => {
 export const denyAnalytics = (): void => {
   saveSetting("allowAnalytics", "denied");
 };
+
+export const earlyAccessAcknowledged = (): boolean => {
+  const settings = getSettings();
+  return settings.earlyAccessAcknowledged;
+};
+
+export const acknowledgeEarlyAccess = (): void => {
+  saveSetting("earlyAccessAcknowledged", true);
+};

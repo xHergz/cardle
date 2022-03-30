@@ -42,6 +42,7 @@ import { createSharableResult } from "../src/util/result.utils";
 import { getSettings } from "../src/lib/settings";
 import Analytics from "../src/lib/analytics";
 import CookieBanner from "../src/components/banners/CookieBanner";
+import EarlyAccessDialog from "../src/components/dialogs/EarlyAccessDialog";
 
 const THE_BEGINNING = 1646651697513;
 
@@ -370,6 +371,7 @@ const Home: NextPage = () => {
           text="Are you sure you want to redeal your current game? You will lose your progress."
         />
         <CookieBanner />
+        <EarlyAccessDialog />
       </main>
 
       <footer className={styles.footer}>

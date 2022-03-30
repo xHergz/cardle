@@ -2,10 +2,12 @@ import { isNil } from "lodash";
 
 export type ShufleSettings = {
   allowAnalytics: "allowed" | "denied" | "unknown";
+  earlyAccessAcknowledged: boolean;
 };
 
 export const DEFAULT_SETTINGS: ShufleSettings = {
   allowAnalytics: "unknown",
+  earlyAccessAcknowledged: false,
 };
 
 const SETTINGS_KEY = "settings";

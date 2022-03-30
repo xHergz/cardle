@@ -2,7 +2,7 @@ import { isNil } from "lodash";
 import mixpanel from "mixpanel-browser";
 
 import { ShufleEvent } from "../constants/analytics";
-import { analyticsAllowed } from "../util/analytics";
+import { analyticsAllowed } from "../util/settings";
 
 class Analytics {
   private _initialized: boolean;
