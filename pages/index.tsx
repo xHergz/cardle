@@ -195,6 +195,7 @@ const Home: NextPage = () => {
           gameMode: gameMode,
           isCorrect: isCorrect,
           tries: currentTry + 1,
+          dailyNumber: gameMode === "daily" ? getDailyNumber() : undefined,
         });
       }
       return;
