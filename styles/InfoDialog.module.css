@@ -1,0 +1,14 @@
+.legendContainer {
+  margin: 8px 0px;
+}
+
+.legendValues {
+  border-radius: 8px;
+  background-color: lightgray;
+  padding: 8px;
+}
+
+.buttonTip {
+  display: flex;
+  align-items: center;
+}
